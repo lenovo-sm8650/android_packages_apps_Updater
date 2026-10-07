@@ -200,7 +200,9 @@ private fun PreferencesContent(
         }
     }
 
-    CertifiedPropsPreferences(certifiedPropsRepository, coroutineScope)
+    if (LocalContext.current.resources.getBoolean(R.bool.config_showCertifiedPropsUpdate)) {
+        CertifiedPropsPreferences(certifiedPropsRepository, coroutineScope)
+    }
 }
 
 @Composable

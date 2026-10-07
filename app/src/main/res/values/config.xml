@@ -25,4 +25,7 @@
     <!-- Whether the recovery update option should be hidden. -->
     <bool name="config_hideRecoveryUpdate">false</bool>
 
+    <!-- Whether a compatible certified-build-properties overlay is provided. -->
+    <bool name="config_showCertifiedPropsUpdate">true</bool>
+
 </resources>
