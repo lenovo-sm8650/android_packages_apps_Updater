@@ -308,6 +308,7 @@ public class UpdaterController {
 
     private boolean verifyPackage(File file) {
         try {
+            verifySha256(file);
             android.os.RecoverySystem.verifyPackage(file, null, null);
             Log.e(TAG, "Verification successful");
             return true;
@@ -321,6 +322,39 @@ public class UpdaterController {
                 Log.e(TAG, "Error while verifying the file", e);
             }
             return false;
+        }
+    }
+
+    /**
+     * Online updates use the SHA-256 of the package (from the update description) as their
+     * download id; make sure the downloaded file matches it. The package signature alone is
+     * not enough when builds are signed with the public test keys.
+     */
+    private void verifySha256(File file) throws Exception {
+        String expected = null;
+        for (DownloadEntry entry : mDownloads.values()) {
+            if (file.equals(entry.mUpdate.getFile())) {
+                expected = entry.mUpdate.getDownloadId();
+                break;
+            }
+        }
+        if (expected == null || !expected.matches("[0-9a-f]{64}")) {
+            return; // imported locally, not from the update server
+        }
+        java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
+        try (java.io.InputStream in = new java.io.FileInputStream(file)) {
+            byte[] buf = new byte[1 << 20];
+            int n;
+            while ((n = in.read(buf)) > 0) {
+                digest.update(buf, 0, n);
+            }
+        }
+        StringBuilder actual = new StringBuilder();
+        for (byte b : digest.digest()) {
+            actual.append(String.format("%02x", b));
+        }
+        if (!expected.equals(actual.toString())) {
+            throw new SecurityException("SHA-256 mismatch: " + actual + " != " + expected);
         }
     }
 
