@@ -20,6 +20,9 @@
 
     <!-- Placeholders: {branch} is net.pixelos.version; {device} is ro.custom.device. -->
     <string name="updater_server_url" translatable="false">https://raw.githubusercontent.com/PixelOS-AOSP/official_devices/{branch}/API/updater/{device}.json</string>
+    <!-- Base64 X.509 Ed25519 public key that signs the update descriptions of a
+         SourceForge folder (updater_server_url = its RSS feed). -->
+    <string name="updater_signing_public_key" translatable="false"></string>
     <string name="changelog_url" translatable="false">https://raw.githubusercontent.com/PixelOS-AOSP/official_devices/{branch}/API/updater/changelogs/{device}.md</string>
     <string name="certified_prop_url" translatable="false">https://raw.githubusercontent.com/PixelOS-AOSP/official_devices/{branch}/API/updater/CertifiedProps/certified_build_props.apk</string>
 
